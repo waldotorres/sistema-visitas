@@ -1,0 +1,44 @@
+﻿@model SistemaVisitas.DTO.LoginViewModel;
+@{
+	ViewData["title"] = "Login";
+}
+
+<h1>Login</h1>
+<div class="card">
+	<div class="card-body">
+		<form asp-action="Login">
+			<div asp-validation-summary="ModelOnly" class="text-danger">
+			</div>
+			@*<div class="mb-3">
+				<label class="form-label" asp-for="Email"></label>
+				<input class="form-control" autocomplete="off" placeholder="Ingresa tu Código" asp-for="Email" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>*@
+			<div class="mb-3">
+				<label class="form-label" asp-for="CodUsuario"></label>
+				<input class="form-control" autocomplete="off" placeholder="Ingresa tu Código" asp-for="CodUsuario" />
+				<span asp-validation-for="CodUsuario" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label class="form-label" asp-for="Password"></label>
+				<input class="form-control" asp-for="Password" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<input class="form-check-input" type="checkbox" asp-for="Recuerdame" />
+				<label class="form-label" asp-for="Recuerdame"></label>
+			</div>
+
+			<div class="mb-3">
+				<button class="btn btn-success">Login</button>
+				<a asp-action="Registro" class="btn btn-primary">Registrarme</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial"></partial>
+}

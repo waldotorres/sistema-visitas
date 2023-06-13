@@ -1,0 +1,185 @@
+﻿@using Microsoft.AspNetCore.Html;
+@using SistemaVisitas.DTO;
+@model SistemaVisitas.DTO.VisitaCreacionDTO;
+@{
+	string accion =  Model.Id > 0 ? "Actualizar" : "Crear";
+	ViewData["title"] = $"{@accion} Visita";
+}
+
+<h1>@accion Visita</h1>
+<patial name="_BotonCrear" model="Visita"></patial>
+
+<div class="alert alert-warning" role="alert" id="divAlert" style="display:none">
+	
+</div>
+<form asp-action="CrearActualizar" id="myForm">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (Model.Id > 0)
+	{
+		<input asp-for="Id" type="hidden" />
+		<input asp-for="IdCitaOriginal" type="hidden" />
+	}
+	<div class="input-group mb-3">
+		<div>
+			<label asp-for="IdCita" class="form-label"></label>
+		</div>
+		<div class="input-group mb-3">
+			<input id="idCita" type="hidden" asp-for="IdCita" />
+			<input id="idTxtCita" class="form-control" autocomplete="off" value="@Model.IdCita" placeholder="Ingrese la cita" readonly />
+			<button class="btn btn-outline-secondary" type="button" id="btnBuscaCitaPorCliente">...</button>
+		</div>
+	</div>
+
+	<div class="mb-3">
+		<div>
+			<label asp-for="IdCliente" class="form-label"></label>
+		</div>
+		<div class="input-group mb-3">
+			<input id="idCliente" type="hidden" asp-for="IdCliente" />
+			<input id="txtNombreCliente" class="form-control" autocomplete="off" value="@Model.Cliente?.NombreCompleto" placeholder="Ingrese el cliente" readonly />
+			<button class="btn btn-outline-secondary" type="button" id="btnBuscaCliente">...</button>
+			<span asp-validation-for="IdCliente" class="text-danger"></span>
+
+		</div>
+	</div>
+	<div class="mb-3">
+		<label asp-for="IdTipoVisita" class="form-label"></label>
+		<select id="idTipoVisita" class="form-select" asp-for="IdTipoVisita" asp-items="@Model.ListaTipoVisita"></select>
+		<span asp-validation-for="IdTipoVisita" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="IdLocal" class="form-label"></label>
+		@{
+			var disabled = Model.IdCita <= 0 ?"disabled":"" ;
+		}
+		<select id="idLocal" class="form-select" asp-for="IdLocal"  asp-items="@Model.ListaLocales"></select>
+		<span asp-validation-for="IdLocal" class="text-danger"></span>
+	</div>
+	<div class="input-group mb-3">
+		<input id="txtIdUsuarioAtencion" type="hidden" asp-for="IdUsuarioAtencion" />
+		<input id="txtNombreUsuarioAtencion" class="form-control" autocomplete="off" value="@Model.UsuarioAtencion?.Nombres @Model.UsuarioAtencion?.Apellidos" placeholder="Ingrese el usuario que atendió" readonly />
+		<button class="btn btn-outline-secondary" type="button"  id="btnBuscaUsuario" >...</button>
+		<span asp-validation-for="IdUsuarioAtencion" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="FechHoraInicio" class="form-label"></label>
+		<input asp-for="FechHoraInicio" class="form-control" />
+		<span asp-validation-for="FechHoraInicio" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="FechHoraFin" class="form-label"></label>
+		<input asp-for="FechHoraFin" class="form-control" />
+		<span asp-validation-for="FechHoraFin" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="Observacion" class="form-label"></label>
+		<textarea asp-for="Observacion" class="form-control"></textarea>
+	</div>
+	<button type="submit" class="btn btn-primary">@accion</button>
+	<a class="btn btn-secondary" asp-action="Index">Cancelar</a>
+</form>
+
+ 
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial"></partial>
+	<partial name="_ModalBusquedaGeneral"></partial>
+	<script>
+		
+		let urlApi = "";
+		//
+		const seleccionVisita = document.getElementById("idTipoVisita");
+		const seleccionLocal = document.getElementById("idLocal");
+		const ctrlIdCita = document.getElementById("idCita");
+		const ctrlIdTxtCita = document.getElementById("idTxtCita");
+		const ctrlIdCliente = document.getElementById("idCliente");
+		const ctrlNombreCliente = document.getElementById("txtNombreCliente");
+		const txtIdUsuarioAtencion = document.getElementById("txtIdUsuarioAtencion");
+		const txtNombreUsuarioAtencion = document.getElementById("txtNombreUsuarioAtencion");
+		const divAlert = document.getElementById("divAlert");
+		const myForm = document.getElementById("myForm");
+
+		window.addEventListener("DOMContentLoaded", (event) => {
+			seleccionLocal.disabled = ctrlIdCita.value !== "" ? true:false;
+		});
+		myForm.onsubmit =()=>{
+			seleccionLocal.disabled = false;
+		}
+
+		// botones
+		const btnBuscaCitaPorCliente = document.getElementById("btnBuscaCitaPorCliente");
+		const btnBuscaCliente = document.getElementById("btnBuscaCliente");
+		const btnBuscaUsuario = document.getElementById("btnBuscaUsuario");
+		
+
+		btnBuscaCitaPorCliente.onclick = () => {
+			urlApi = '@Url.Action("BuscarCita", "Cita")';
+			abrirModalBusqueda("Buscar Cita por Cliente");
+		}
+
+		btnBuscaCliente.onclick = () => {
+
+			if (ctrlIdCita.value != "")
+			{
+				mostrarMensajeAlerta("No se puede cambiar el cliente cuando este proviene de una cita" );
+				return;
+			}
+			urlApi = '@Url.Action("BuscarCliente", "Cliente")';
+			abrirModalBusqueda("Buscar Cliente");
+		}
+
+		btnBuscaUsuario.onclick = ()=>{
+			urlApi = '@Url.Action("BuscarUsuario", "Usuario")';
+			abrirModalBusqueda("Buscar Usuario Atención");
+		}
+
+		// alerta
+		const mostrarMensajeAlerta = (mensaje)=>{
+
+			divAlert.innerHTML = mensaje;
+			divAlert.style.display = "block";
+			const timer = setTimeout( ()=>{
+				divAlert.style.display = "none";
+				clearTimeout(timer);
+			},1000 )
+
+			
+		}
+		// esta funcion es llamada despues de seleccionar una fila del modal
+		asignarValores =(res)=>{
+
+			console.log("res", res);
+			if(res == null){
+				return;
+			}
+
+			if (res.tipoBusqueda == '@Url.Action("BuscarCita","Cita")')
+			{
+				const moreInfo = JSON.parse(res?.informacionAdicionalJson);
+				seleccionVisita.value = moreInfo?.idTipoVisita;
+				seleccionLocal.value = moreInfo?.idLocal;
+				ctrlIdCita.value = res.id;
+				ctrlIdTxtCita.value = res.id;
+				ctrlIdCliente.value = moreInfo?.cliente.id;
+				ctrlNombreCliente.value = moreInfo?.cliente.NombreCompleto;
+				//bloquea controles para cliente y local
+				//btnBuscaCliente.disabled = true;
+				seleccionLocal.disabled = true;
+				return;
+			}
+			if (res.tipoBusqueda == '@Url.Action("BuscarUsuario","Usuario")') {
+				txtIdUsuarioAtencion.value = res.id;
+				txtNombreUsuarioAtencion.value = res.descripcion;
+			}
+			if (res.tipoBusqueda == '@Url.Action("BuscarCliente", "Cliente")') {
+				ctrlIdCliente.value = res.id;
+				ctrlNombreCliente.value = res.descripcion;
+			}
+			
+		};
+
+	</script>
+	<script src="~/js/ModalBusquedaGeneral.js"></script>
+ 
+}

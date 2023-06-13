@@ -1,0 +1,70 @@
+﻿@model Cliente;
+@{
+	string accion = Model.Id > 0 ? "Actualizar" : "Crear";
+	ViewData["title"] = $"{accion} Cliente";
+}
+<h1 class="mb-3">@accion Cliente</h1>
+
+<div class="row">
+	<div class="col-8">
+		<form asp-action="CrearActualizar">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			@if (Model.Id > 0)
+			{
+				<input type="hidden" asp-for="Id" />
+			}
+			<div class="mb-3">
+				<label class="form-label" asp-for="Nombres"></label>
+				<input asp-for="Nombres" class="form-control" placeholder="Ingresar nombres del cliente" autocomplete="off" />
+				<span asp-validation-for="Nombres" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="Apellidos"></label>
+				<input asp-for="Apellidos" class="form-control" placeholder="Ingresar apellidos de cliente" autocomplete="off" />
+				<span asp-validation-for="Apellidos" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="FechaNacimiento"></label>
+				<input asp-for="FechaNacimiento" class="form-control" />
+				<span asp-validation-for="FechaNacimiento" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="Dni"></label>
+				<input asp-for="Dni" class="form-control" />
+				<span asp-validation-for="Dni" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="Email"></label>
+				<input asp-for="Email" class="form-control" autocomplete="off" placeholder="Email" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="Telefono"></label>
+				<input asp-for="Telefono" class="form-control" />
+				<span asp-validation-for="Telefono" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="Direccion"></label>
+				<input asp-for="Direccion" class="form-control" autocomplete="off" placeholder="Direccion" />
+				<span asp-validation-for="Direccion" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label class="form-label" asp-for="CiudadRegion"></label>
+				<input asp-for="CiudadRegion" class="form-control" autocomplete="off" placeholder="Ciudad/Region" />
+				<span asp-validation-for="CiudadRegion" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<button class="btn btn-primary">
+					@accion
+				</button>
+				<a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial"></partial>
+}

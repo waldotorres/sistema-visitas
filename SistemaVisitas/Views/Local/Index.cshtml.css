@@ -1,0 +1,21 @@
+﻿.acordeon-local button {
+    color: black !important;
+    font-size: 20px;
+}
+
+    .acordeon-local button > span {
+        display: flex;
+        justify-content: space-between;
+        width: 100%
+    }
+
+.acordeon-local ul li {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.acordeon-local .acordeon-collapse {
+    font-size: 18px;
+}

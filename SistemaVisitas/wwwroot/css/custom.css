@@ -1,0 +1,7 @@
+﻿.fila-busqueda {
+    cursor: pointer;
+}
+
+    .fila-busqueda:hover {
+        background-color: aqua;
+    }

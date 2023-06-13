@@ -1,0 +1,105 @@
+﻿@model SistemaVisitas.DTO.CitaCreacionDTO;
+
+@{
+	string accion = Model.Id > 0 ? "Actualizar" : "Crear";
+	ViewData["title"] = $"{@accion} Cita";
+}
+
+<h1>@accion Cita</h1>
+
+<form asp-action="CrearActualizar">
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	@if (Model.Id > 0)
+	{
+		<input type="hidden" asp-for="Id" />
+	}
+
+	<div>
+		<label class="form-label" asp-for="NombreClienteVista"></label>
+	</div>
+	
+	<div class="input-group mb-3">
+		<input id="txtIdCliente" class="form-control" asp-for="ClienteId" type="hidden" />
+		<input id="txtNombreCliente" asp-for="NombreClienteVista" class="form-control" placeholder="Cliente" readonly />
+		<button class="btn btn-outline-secondary" type="button" id="btnAbrirModalBusqueda">...</button>
+	</div>
+	<div>
+		<span asp-validation-for="NombreClienteVista" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label class="form-label" asp-for="LocalId"></label>
+		<select class="form-select" asp-for="LocalId" asp-items="@Model.ListaLocales"></select>
+		<span asp-validation-for="LocalId" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label class="form-label" asp-for="TipoVisitaId"></label>
+		<select class="form-select" asp-for="TipoVisitaId" asp-items="@Model.ListaTipoVisita"></select>
+		<span asp-validation-for="TipoVisitaId" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label class="form-label" asp-for="FechaHoraInicioCita"></label>
+		<input class="form-control" asp-for="FechaHoraInicioCita" />
+		<span asp-validation-for="FechaHoraInicioCita" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label class="form-label" asp-for="FechaHoraFinCita"></label>
+		<input class="form-control" asp-for="FechaHoraFinCita" />
+		<span asp-validation-for="FechaHoraFinCita" class="text-danger"></span>
+	</div>
+
+	<div class="mb-3">
+		<label class="form-label" asp-for="Observacion"></label>
+		<textarea class="form-control" asp-for="Observacion"></textarea>
+		<span asp-validation-for="Observacion" class="text-danger"></span>
+	</div>
+
+	<button type="submit" class="btn btn-primary">
+		@accion
+	</button>
+	<a class="btn btn-secondary" asp-action="Index">
+		Cancelar
+	</a>
+
+</form>
+
+
+
+@section Scripts{
+
+	<partial name="_ValidationScriptsPartial"></partial>
+
+
+	<partial name="_ModalBusquedaGeneral"></partial>
+
+	<script>
+		let urlApi = "";
+
+		const txtIdCliente = document.getElementById(`txtIdCliente`);
+		const txtNombreCliente = document.getElementById(`txtNombreCliente`);
+		//botones
+		const btnAbrirModalBusqueda = document.getElementById(`btnAbrirModalBusqueda`);
+		 
+
+		btnAbrirModalBusqueda.onclick = ()=>{
+			urlApi = '@(Url.Action("BuscarCliente", "Cliente"))';
+			abrirModalBusqueda("Buscar Cliente");
+		}
+		// funcion llamada despues de seleccionar fila de modal
+		asignarValores = (res) => {
+
+			console.log("res", res);
+			if (res == null) {
+				return;
+			}
+			txtIdCliente.value = res.id;
+			txtNombreCliente.value = res.descripcion;
+			
+
+		};
+	</script>
+ 
+	<script src="~/js/ModalBusquedaGeneral.js"></script>
+}		

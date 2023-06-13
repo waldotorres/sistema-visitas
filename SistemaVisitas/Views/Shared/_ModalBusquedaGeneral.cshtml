@@ -1,0 +1,28 @@
+﻿
+<div class="modal fade" id="modalBusquedaGeneral" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="tagTitleModal"></h5>
+				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div>
+					<input class="form-control" autocomplete="off" placeholder="Ingrese un texto de búsqueda" id="txtSearch" />
+					<span id="spanError" class="text-danger"></span>
+				</div>
+
+				<div id="divResultSearch" style="overflow-y:scroll;max-height:300px;">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnSalir">Cancelar</button>
+				<button type="button" class="btn btn-primary" onclick="buscarApi()">Buscar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+ 

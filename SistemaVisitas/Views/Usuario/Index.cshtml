@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Usuario>;
+@{
+	ViewData["title"] = "Lista de Usuarios";
+	string titulo = "Usuario";
+}
+
+<h1>Lista de Usuarios</h1>
+<partial name="_BotonCrear" model="@titulo"></partial>
+
+<div>
+	<table class="table table-striped">
+		<thead class="table-dark">
+			<tr>
+				<th>Nombres</th>
+				<th>Apellidos</th>
+				<th>Cod Usuario</th>
+				<th>Email</th>
+				<th>Es Usuario Atención</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var usuario in Model)
+			{
+				<tr>
+					<td>@usuario.Nombres</td>
+					<td>@usuario.Apellidos</td>
+					<td>@usuario.CodUsuario</td>
+					<td>@usuario.Email</td>
+					<td>@( usuario.EsUsuarioAtencion ? "Si":"No" )</td>
+					<td>
+						<a class="btn btn-danger" asp-action="Borrar" asp-route-id="@usuario.Id" ><i class="bi bi-trash-fill"></i></a>
+						<a class="btn btn-primary" asp-action="CrearActualizar" asp-route-id="@usuario.Id"><i class="bi bi-pencil-fill"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+

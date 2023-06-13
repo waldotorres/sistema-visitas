@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Visita>
+
+@{
+	ViewData["title"] = "Lista de Visitas";
+	string titulo = "Visita";
+}
+
+<h1>Visitas</h1>
+<partial name="_BotonCrear" model=@titulo></partial>
+
+<div class="mb-3">
+	<table class="table table-bordered">
+		<thead class="table-dark">
+			<tr>				
+				<th>Cliente</th>
+				<th>Local</th>
+				<th>Usuario Atención</th>
+				<th>Inicio / Fin</th>
+				<th>Tipo</th>
+				<th>Observaciones</th>
+				<th>Acciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var visita in Model)
+			{
+				<tr>
+					@{
+						var idBorrar = $"lblombre-{visita.Id}";
+					}
+					<td id="@idBorrar">@visita.Cliente.NombreCompleto</td>
+					<td>@visita.Local.Nombre </td>
+					<td>@visita.UsuarioAtencion.Nombres @visita.UsuarioAtencion.Apellidos</td>
+					<td>@visita.FechHoraInicio.ToString("g") <strong>/</strong> @visita.FechHoraFin.ToString("g")</td>
+					<td>@visita.TipoVisita.Nombre</td>
+					<td>@visita.Observacion</td>
+					<td>
+						<a asp-action="CrearActualizar" asp-route-id="@visita.Id" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a>
+						<a asp-action="Borrar" asp-route-id="@visita.Id" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

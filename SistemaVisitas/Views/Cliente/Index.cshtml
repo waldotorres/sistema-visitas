@@ -1,0 +1,67 @@
+﻿@model SistemaVisitas.DTO.ClienteIndexDTO;
+@{
+	ViewData["title"] = "Lista de Clientes";
+}
+<h1>Lista de Clientes ( @Model.CantidadRegistros) </h1>
+<a class="btn btn-primary mb-3" asp-action="CrearActualizar">
+	<i class="bi bi-plus-square"></i>
+	Crear Cliente
+</a>
+<div>
+	<table class="table">
+		<thead class="table-dark">
+			<tr>
+				<th>Nombre Completo</th>
+				<th>Fec Nac</th>
+				<th>Telefono</th>
+				<th>Email</th>
+				<th>Direccion</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody class="table-striped">
+			@foreach (var cliente in Model.ListaClientes)
+			{
+				<tr>
+					@{
+						var idTagCliente = $"lblNombre-{cliente.Id}";
+					}
+					<td id="@idTagCliente">@($"{cliente.Nombres} {cliente.Apellidos}") </td>
+					<td>@($"{cliente.FechaNacimiento?.ToString("dd/MM/yyyy")}") </td>
+					<td>@($"{cliente.Telefono}") </td>
+					<td>@($"{cliente.Email}") </td>
+					<td>@($"{cliente.Direccion}/{cliente.CiudadRegion}") </td>
+					<td>
+						<a class="btn btn-primary" asp-action="CrearActualizar" asp-route-id="@cliente.Id"><i class="bi bi-pencil-fill"></i></a>
+						<button class="btn btn-danger" onclick="btnAccionBorrar(@cliente.Id)"><i class="bi bi-trash-fill"></i></button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div style="display:flex; justify-content:space-around">
+		@{
+			var classAnterior = Model.paginaAnterior < 0 ? "disabled" : "";
+			var classSiguiente = Model.paginaSiguiente < 0 ? "disabled" : "";
+		}
+		<a class="btn btn-primary @classAnterior" asp-action="Index" asp-route-pagina="@Model.paginaAnterior">Anterior</a>
+		<a class="btn btn-primary @classSiguiente" asp-action="Index" asp-route-pagina="@Model.paginaSiguiente">Siguiente</a>
+	</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/AccionBotonBorrar.js">
+
+	</script>
+	<script>
+		//toma el nombre del registro
+
+		btnAccionBorrar = async (id) => {
+			const nombre = document.getElementById(`lblNombre-${id}`).innerText;
+			//debugger;
+			const url = '@Url.Action("Borrar")';
+			await accionBorrar(id, url, nombre);
+		}
+
+	</script>
+}

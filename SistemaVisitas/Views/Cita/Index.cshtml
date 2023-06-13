@@ -1,0 +1,85 @@
+﻿@using SistemaVisitas.Enums;
+@model  SistemaVisitas.DTO.CitaIndexDTO;
+@{
+	ViewData["title"] = "Lista de Citas";
+}
+
+<h1>Lista de Citas @(Model.NombreLocal == "" ? "" : (" : " + Model.NombreLocal)) </h1>
+
+<a class="btn btn-primary mb-3" asp-action="CrearActualizar">
+	<i class="bi bi-plus-square"></i>
+	Crear
+</a>
+
+
+
+<table class="table table-striped">
+	<thead class="table-dark">
+		<tr>
+			@if (Model.NombreLocal == "")
+			{				
+				<th>Local</th>
+			}
+			<th>Tipo Visita</th>
+			<th>Hora Inicio</th>
+			<th>Hora Fin</th>
+			<th>Estado</th>
+			<th>Cliente</th>
+			<th>Observacion</th>
+			<th>Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var cita in Model.ListaCitas)
+		{
+			<tr>
+				@if (Model.NombreLocal == "")
+				{
+					<th> @cita.Local.Nombre </th>
+				}
+				<td>@cita.TipoVisita.Nombre</td>
+				<td>@cita.FechaHoraInicioCita.ToString("g") </td>
+				<td>@cita.FechaHoraFinCita.ToString("g")</td>
+				<td> @{
+						var estado = Enum.GetName(typeof(EstadosCita), @cita.EstadoCita); 
+					}
+					@estado
+				</td>
+				@{
+					var idSeleccion = $"lblNombre-{cita.Id}";
+				}
+				<td>
+					<span style="display:none;" id="@idSeleccion"> Cita de @cita.Cliente.NombreCompleto</span>
+					@cita.Cliente.NombreCompleto
+				</td>
+				<td> @cita.Observacion </td>
+				<td>
+					<a class="btn btn-primary" asp-action="CrearActualizar" asp-route-id="@cita.Id">
+						<i class="bi bi-pencil-fill"></i>
+					</a>
+					<button class="btn btn-danger" onclick="btnAccionBorrar(@cita.Id)">
+						<i class="bi bi-trash-fill"></i>
+					</button>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+@section Scripts{
+	<script src="~/js/AccionBotonBorrar.js">
+
+	</script>
+	<script>
+		//toma el nombre del registro
+
+		btnAccionBorrar = async (id) => {
+			const nombre = document.getElementById(`lblNombre-${id}`).innerText;
+			//debugger;
+			const url = '@Url.Action("Borrar")';
+			await accionBorrar(id, url, nombre);
+		}
+
+	</script>
+}

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<SistemaVisitas.DTO.CiudadIndexDTO>;
+@{
+	ViewData["title"] = "Ciudad";
+}
+
+<h1>Ciudades</h1>
+<a class="btn btn-primary mb-3" asp-action="CrearActualizar">
+	<i class="bi bi-plus-square"></i>
+	Crear Ciudad
+</a>
+
+
+
+<div class="accordion acordeon-ciudades" style="width:60%">
+	@foreach (var grupo in Model)
+	{
+		<div class="accordion-item">
+			<h2 class="accordion-header">
+				@{
+					var id = grupo.RegionNombre;
+					var dataBSTarget = "#" + id;
+				}
+
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@dataBSTarget">
+					<span class="me-3">
+						<span><strong> @grupo.RegionNombre </strong></span>
+						<span> (@grupo.Ciudades.Count().ToString()) </span>
+					</span>
+				</button>
+			</h2>
+			<div id="@id" class="accordion-collapse collapse show">
+				<div>
+					<ul class="list-group">
+						@foreach (var ciudad in grupo.Ciudades)
+						{
+							<li class="list-group-item">
+								<span>
+									@{
+										var idNombre = $"lblNombre-{ciudad.Id}";
+									}
+									<strong id="@idNombre">@ciudad.Nombre</strong>
+								</span>
+								<span>
+									<a class="btn btn-primary" asp-action="CrearActualizar" asp-route-id="@ciudad.Id">
+										<i class="bi-pencil-fill"></i>
+									</a>
+									<button onclick="btnAccionBorrar(@ciudad.Id)" class="btn btn-danger" asp-action="Borrar" asp-route-id="@ciudad.Id">
+										<i class="bi-trash-fill"></i>
+									</button>
+								</span>
+
+
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+
+@section Scripts{
+	<script src="~/js/AccionBotonBorrar.js">
+
+	</script>
+	<script>
+		//toma el nombre del registro
+
+		btnAccionBorrar = async (id) => {
+			const nombre = document.getElementById(`lblNombre-${id}`).innerText;
+			//debugger;
+			const url = '@Url.Action("Borrar")';
+			await accionBorrar(id, url, nombre);
+		}
+
+	</script>
+}

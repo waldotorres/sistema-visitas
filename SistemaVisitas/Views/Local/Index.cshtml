@@ -1,0 +1,79 @@
+﻿@model IEnumerable<SistemaVisitas.DTO.LocalIndexDTO>;
+@{
+	ViewData["title"] = "Locales";
+}
+
+<h1>Locales</h1>
+<a class="btn btn-primary mb-3" asp-action="CrearActualizar" ><i class="bi bi-plus-square"></i>  Crear Local</a>
+
+
+<div class="accordion acordeon-local">
+	@foreach (var grupo in Model)
+	{
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="cabeceraUno">
+				@{
+					var id = grupo.NombreRegion;
+					var dataBSTarget = "#" + id;
+				}
+
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@dataBSTarget">
+					<span class="me-3">
+						<span><strong> @grupo.NombreRegion </strong></span>
+						<span><strong> Direccion </strong></span>
+						<span><strong> Ciudad </strong></span>
+						<span> (@grupo.Locales.Count().ToString()) </span>
+					</span>
+				</button>
+			</h2>
+			<div id="@id" class="accordion-collapse collapse show">
+				<div>
+					<ul class="list-group">
+						@foreach (var local in grupo.Locales)
+						{
+							<li class="list-group-item">
+								<span>
+									@{
+										var idNombre = $"lblNombre-{local.Id}";
+									}
+									<strong id="@idNombre">@local.Nombre</strong>
+								</span>
+								<span>@local.Direccion</span>
+								<span>@local.Ciudad.Nombre</span>
+								<span>
+									<a class="btn btn-primary" asp-action="CrearActualizar" asp-route-id="@local.Id">
+										<i class="bi-pencil-fill"></i>
+									</a>
+									<button onclick="btnAccionBorrar(@local.Id)" class="btn btn-danger" asp-action="Borrar" asp-route-id="@local.Id">
+										<i class="bi-trash-fill"></i>
+									</button>
+								</span>
+
+
+							</li>
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+
+@section Scripts{
+	<script src="~/js/AccionBotonBorrar.js">
+
+	</script>
+	<script>
+
+
+
+		btnAccionBorrar = async (id) => {
+			const nombre = document.getElementById(`lblNombre-${id}`).innerText;
+			const url = '@Url.Action("Borrar")';
+			debugger;
+			await accionBorrar(id, url, nombre);
+		}
+
+	</script>
+}

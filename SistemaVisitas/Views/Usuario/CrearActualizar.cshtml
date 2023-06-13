@@ -1,0 +1,81 @@
+﻿@model SistemaVisitas.DTO.UsuarioCreacionDTO
+@{
+	ViewData["title"] = "";
+	string accion = Model.UserName == null ? "Crear" : "Actualizar";
+}
+
+<h1>@accion Usuario</h1>
+
+<div>
+	<form asp-action="CrearActualizar">
+		<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+		@if (Model.UserName != null)
+		{
+			<input type="hidden" asp-for="Id" />
+			<input type="hidden" asp-for="UserName" />
+		}
+		<div class="mb-3">
+			<label class="form-label" asp-for="Nombres"></label>
+			<input class="form-control" asp-for="Nombres" />
+			<span asp-validation-for="Nombres" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" asp-for="Apellidos"></label>
+			<input class="form-control" asp-for="Apellidos" />
+			<span asp-validation-for="Apellidos" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" asp-for="Email"></label>
+			<input class="form-control" type="email" asp-for="Email" />
+			<span asp-validation-for="Email" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label" asp-for="CodUsuario" ></label>
+			<input class="form-control" asp-for="CodUsuario" id="txtCodUsuario" />
+			<span asp-validation-for="CodUsuario" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" asp-for="Password"></label>
+			<input class="form-control" asp-for="Password" />
+			<span asp-validation-for="Password" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label class="form-label" asp-for="PasswordVerificacion"></label>
+			<input class="form-control" asp-for="PasswordVerificacion" />
+			<span asp-validation-for="PasswordVerificacion" class="text-danger"></span>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label" asp-for="EsUsuarioAtencion"></label>
+			<input type="checkbox" class="form-check-input" asp-for="EsUsuarioAtencion" />
+
+		</div>
+		<div class="mb-3">
+			<label class="form-label" asp-for="EsUsuarioAdmin"></label>
+			<input type="checkbox" class="form-check-input" asp-for="EsUsuarioAdmin" />
+
+		</div>
+		<div class="mb-3">
+			<button class="btn btn-primary" type="submit">
+				@accion
+			</button>
+			<a class="btn btn-secondary" asp-action="Index">
+				Cancelar
+			</a>
+		</div>
+	</form>
+</div>
+
+@section Scripts{
+	<partial name="_ValidationScriptsPartial"></partial>
+	<script>
+
+		const txtCodUsuario = document.getElementById("txtCodUsuario");
+		txtCodUsuario.onkeyup = (event)=>{
+			event.target.value = event.target.value.toUpperCase();
+		}
+
+	</script>
+}

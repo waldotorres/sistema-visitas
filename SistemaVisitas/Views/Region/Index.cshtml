@@ -1,0 +1,70 @@
+﻿@model  SistemaVisitas.DTO.RegionIndexDTO;
+@{
+	ViewData["title"] = "Regiones";
+}
+
+
+
+<h1>Regiones ( @Model.totalRegistros ) </h1>
+
+<a asp-action="CrearActualizar" class="btn btn-primary mb-3 mt-2">
+	<i class="bi bi-plus-square"></i>
+	Crear Region
+</a>
+
+<div class="row d-flex">
+	<div class="col-6">
+		<table class="table table-striped">
+			<thead class="table-dark">
+				<tr>
+					<th>Nombre</th>
+					<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var region in Model.Regiones)
+				{
+					<tr>
+						@{
+							var idFila = $"lblNombre-{@region.Id}";
+						}
+						<td id="@idFila">@region.Nombre</td>
+						<td style="text-align:center">
+
+							<a asp-action="CrearActualizar" asp-route-id="@region.Id" class="btn btn-primary"><i class="bi bi-pencil-fill" style="font-size:25px"></i></a>
+							@*<a asp-action="Borrar" asp-route-id="@region.Id" class="btn btn-danger"><i class="bi bi-trash-fill" style="font-size:25px"></i></a>*@
+							<a id="btnBorrar" onclick="btnAccionBorrar(@region.Id)" class="btn btn-danger"><i class="bi bi-trash-fill" style="font-size:25px"></i></a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<div style="display:flex; justify-content:space-between">
+			@{
+				var classAnterior = @Model.paginaAnterior > 0 ? "" : "disabled";
+				var classSiguiente = @Model.paginaSiguiente > 0 ? "" : "disabled";
+			}
+			<a class="btn btn-primary @classAnterior" asp-action="Index" asp-route-pagina="@Model.paginaAnterior">Anterior</a>
+			<a class="btn btn-primary @classSiguiente" asp-action="Index" asp-route-pagina="@Model.paginaSiguiente">Siguiente</a>
+		</div>
+	</div>
+</div>
+
+
+
+@section Scripts{
+	<script src="~/js/AccionBotonBorrar.js">
+
+	</script>
+	<script>
+		
+		
+
+		btnAccionBorrar = async (id)=>{
+			const nombre = document.getElementById(`lblNombre-${id}`).innerText;
+			const url = '@Url.Action("Borrar")';
+			await accionBorrar(id, url, nombre);
+		}
+		
+	</script>
+}
